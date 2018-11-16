@@ -30,7 +30,7 @@
           </Menu>
         </menus>
       </MenuBar>
-      <TableView layoutX="11.0" layoutY="236.0" prefHeight="200.0" prefWidth="578.0">
+      <TableView focusTraversable="false" layoutX="11.0" layoutY="236.0" prefHeight="200.0" prefWidth="578.0">
         <columns>
           <TableColumn prefWidth="208.0" text="Name" />
           <TableColumn minWidth="0.0" prefWidth="171.0" text="Age" />
