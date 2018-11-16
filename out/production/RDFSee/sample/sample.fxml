@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="sample.Controller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -57,19 +57,19 @@
                </font>
             </Label>
             <ChoiceBox fx:id="filterChoice" focusTraversable="false" layoutX="617.0" layoutY="42.0" prefWidth="150.0" />
-            <TextField focusTraversable="false" layoutX="152.0" layoutY="42.0" prefHeight="26.0" prefWidth="122.0" />
-            <Button focusTraversable="false" layoutX="274.0" layoutY="42.0" mnemonicParsing="false" text="Search" />
+            <TextField fx:id="searchQuery" focusTraversable="false" layoutX="152.0" layoutY="42.0" prefHeight="26.0" prefWidth="122.0" />
+            <Button fx:id="searchButton" focusTraversable="false" layoutX="274.0" layoutY="42.0" mnemonicParsing="false" text="Search" />
             <Label layoutX="133.0" layoutY="14.0" text="Data Search">
                <font>
                   <Font size="19.0" />
                </font>
             </Label>
-            <ChoiceBox focusTraversable="false" layoutX="30.0" layoutY="42.0" prefHeight="26.0" prefWidth="122.0" />
-            <TableView focusTraversable="false" layoutX="30.0" layoutY="349.0" prefHeight="200.0" prefWidth="738.0">
+            <ChoiceBox fx:id="departmentChoice" focusTraversable="false" layoutX="30.0" layoutY="42.0" prefHeight="26.0" prefWidth="122.0" />
+            <TableView fx:id="triplesTable" focusTraversable="false" layoutX="30.0" layoutY="349.0" prefHeight="200.0" prefWidth="738.0">
                <columns>
-                  <TableColumn prefWidth="235.19998168945312" text="Subject" />
-                  <TableColumn minWidth="0.0" prefWidth="248.79998779296875" text="Predicate" />
-                  <TableColumn minWidth="0.0" prefWidth="245.60003662109375" text="Object" />
+                  <TableColumn fx:id="subjectColumn" prefWidth="235.19998168945312" text="Subject" />
+                  <TableColumn fx:id="predicateColumn" minWidth="0.0" prefWidth="248.79998779296875" text="Predicate" />
+                  <TableColumn fx:id="objectColumn" minWidth="0.0" prefWidth="245.60003662109375" text="Object" />
                </columns>
             </TableView>
             <Label layoutX="371.0" layoutY="288.0" text="Triples">
@@ -78,13 +78,13 @@
                </font>
             </Label>
             <Separator layoutX="30.0" layoutY="288.0" prefHeight="2.0" prefWidth="738.0" />
-            <TextField focusTraversable="false" layoutX="59.0" layoutY="316.0" prefHeight="26.0" prefWidth="634.0" />
+            <TextField fx:id="uriQuery" focusTraversable="false" layoutX="59.0" layoutY="316.0" prefHeight="26.0" prefWidth="634.0" />
             <Label layoutX="30.0" layoutY="316.0" text="URI:">
                <font>
                   <Font size="16.0" />
                </font>
             </Label>
-            <Button focusTraversable="false" layoutX="694.0" layoutY="316.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Show" />
+            <Button fx:id="uriButton" focusTraversable="false" layoutX="694.0" layoutY="316.0" mnemonicParsing="false" prefHeight="26.0" prefWidth="74.0" text="Show" />
          </children>
     </AnchorPane>
   </children>
