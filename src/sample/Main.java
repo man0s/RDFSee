@@ -13,6 +13,9 @@ import javafx.stage.Stage;
 import org.apache.jena.base.Sys;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
+import org.apache.jena.reasoner.Reasoner;
+import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
+import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.util.FileManager;
 
 import java.io.File;
@@ -257,7 +260,9 @@ public class Main extends Application {
             String personURI = controller.uriQuery.getText();
             try {
                 Model model = FileManager.get().loadModel(file.toString());
-                //Resource personURI= model.createResource(person);
+
+
+
                 // list the statements in the Model
                 StmtIterator iter = model.listStatements();
 
