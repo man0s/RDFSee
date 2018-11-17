@@ -64,7 +64,7 @@
                   <Font size="19.0" />
                </font>
             </Label>
-            <ChoiceBox fx:id="filerChoice" focusTraversable="false" layoutX="30.0" layoutY="42.0" prefHeight="26.0" prefWidth="122.0" />
+            <ChoiceBox fx:id="filterChoice" focusTraversable="false" layoutX="30.0" layoutY="42.0" prefHeight="26.0" prefWidth="122.0" />
             <TableView fx:id="triplesTable" focusTraversable="false" layoutX="30.0" layoutY="349.0" prefHeight="200.0" prefWidth="738.0">
                <columns>
                   <TableColumn fx:id="subjectColumn" prefWidth="235.19998168945312" text="Subject" />
