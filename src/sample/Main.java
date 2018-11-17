@@ -252,6 +252,42 @@ public class Main extends Application {
 
         });
 
+        controller.uriButton.setOnAction((event) -> {
+            controller.triplesTable .getItems().clear();
+            String personURI = controller.uriQuery.getText();
+            try {
+                Model model = FileManager.get().loadModel(file.toString());
+                //Resource personURI= model.createResource(person);
+                // list the statements in the Model
+                StmtIterator iter = model.listStatements();
+
+                // print out the predicate, subject and object of each statement
+                while (iter.hasNext()) {
+                    Statement stmt = iter.nextStatement();  // get next statement
+                    Resource subject = stmt.getSubject();     // get the subject
+                    Property predicate = stmt.getPredicate();   // get the predicate
+                    RDFNode object = stmt.getObject();      // get the object
+                    String subjectURI = "http://www.university.fake/university#" + stmt.getSubject().toString().substring(4);
+
+                    if (subjectURI.equals(personURI)) {
+                        controller.setUriData(subject.toString(), predicate.toString(), object.toString());
+                    }
+
+                }
+
+
+
+            } catch (Exception ex) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Triples Error");
+                alert.setHeaderText("Something went wrong with the triples..!");
+                alert.showAndWait();
+                ex.printStackTrace();
+            }
+
+
+        });
+
         primaryStage.setTitle("RDFSee");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
