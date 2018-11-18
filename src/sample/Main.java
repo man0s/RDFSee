@@ -289,7 +289,21 @@ public class Main extends Application {
                 alert.showAndWait();
                 ex.printStackTrace();
             }
+        });
 
+        controller.professorButton.setOnAction((event) -> {
+
+        });
+
+        controller.studentButton.setOnAction((event) -> {
+
+        });
+
+        controller.departmentButton.setOnAction((event) -> {
+
+        });
+
+        controller.lessonButton.setOnAction((event) -> {
 
         });
 
