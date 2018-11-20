@@ -3,6 +3,7 @@ package sample;
 import com.sun.deploy.xml.XMLNode;
 import javafx.application.Application;
 import javafx.application.Platform;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -15,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.geometry.Insets;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
@@ -311,6 +313,97 @@ public class Main extends Application {
         });
 
         controller.professorButton.setOnAction((event) -> {
+            // Create the custom dialog.
+            Dialog<Staff> dialog = new Dialog<>();
+            dialog.setTitle("Add Professor");
+
+
+            // Set the button types.
+            ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+            // Create the username and password labels and fields.
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(40, 170, 20, 20));
+
+            TextField name = new TextField();
+            name.setPromptText("Name");
+            TextField phone = new TextField();
+            phone.setPromptText("Phone");
+            TextField age = new TextField();
+            age.setPromptText("Age");
+            ObservableList<String> options =
+                    FXCollections.observableArrayList();
+            ComboBox<String> comboBox = new ComboBox<>(options);
+
+            grid.add(new Label("Name:"), 0, 0);
+            grid.add(name, 1, 0);
+            grid.add(new Label("Phone:"), 0, 1);
+            grid.add(phone, 1, 1);
+            grid.add(new Label("Age:"), 0, 2);
+            grid.add(age, 1, 2);
+            grid.add(new Label("Department:"), 0, 3);
+            grid.add(comboBox, 1, 3);
+
+            Model model = FileManager.get().loadModel(file.toString());
+
+            String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
+                    "PREFIX rdfs: <http://www.w3.org/2000/01/22-rdf-schema#>" +
+                    "PREFIX uni: <http://www.university.fake/university#>" +
+                    "SELECT distinct ?depname " +
+                    "WHERE {" +
+                    "{ ?person rdf:type <uni:Person> }" +
+                    "UNION { ?person rdf:type <uni:Student> }" +
+                    "UNION { ?person rdf:type <uni:Professor> }" +
+                    "?person uni:member_of ?dep ." +
+                    "?dep uni:dep_name ?depname }";
+
+            Query query = QueryFactory.create(queryString);
+            try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+                ResultSet result = qexec.execSelect();
+                for (; result.hasNext(); ) {
+                    QuerySolution soln = result.nextSolution();
+                    String depname = soln.getLiteral("depname").toString();
+                    options.add(depname.toString());
+                }
+            }
+            comboBox.getSelectionModel().selectFirst();
+
+
+            dialog.getDialogPane().setContent(grid);
+            BooleanBinding bb = new BooleanBinding() {
+                {
+                    super.bind(name.textProperty(),
+                            phone.textProperty(),
+                            age.textProperty());
+                }
+
+                @Override
+                protected boolean computeValue() {
+                    return (name.getText().isEmpty()
+                            || phone.getText().isEmpty()
+                            || age.getText().isEmpty());
+                }
+            };
+
+            Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+            addButton.disableProperty().bind(bb); //disable button when inputs are empty
+
+            // Request focus on the username field by default.
+            Platform.runLater(() -> name.requestFocus());
+
+            // when the login button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == addButtonType) {
+                    //do the queries
+                    return new Staff(name.getText(), phone.getText(), age.getText(), comboBox.getValue().toString());
+                }
+                return null;
+            });
+
+            dialog.showAndWait();
 
         });
 
@@ -337,6 +430,20 @@ public class Main extends Application {
         fileChooser.setInitialDirectory(
                 new File(System.getProperty("user.home") + "/Desktop")
         );
+    }
+
+    private static class Staff {
+        String name;
+        String phone;
+        String age;
+        String department;
+
+        public Staff(String name, String phone, String age, String department) {
+            this.name = name;
+            this.phone = phone;
+            this.age = age;
+            this.department = department;
+        }
     }
 
     public static void main(String[] args) {
