@@ -2,26 +2,46 @@ package sample;
 
 import com.sun.deploy.xml.XMLNode;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
+import javafx.scene.control.*;
+import javafx.scene.control.Dialog;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Pair;
 import org.apache.jena.base.Sys;
+import org.apache.jena.ontology.OntClass;
+import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontology.OntModelSpec;
 import org.apache.jena.query.*;
 import org.apache.jena.rdf.model.*;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
 import org.apache.jena.util.FileManager;
+import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
 
+import java.awt.*;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 
 
 public class Main extends Application {
@@ -35,7 +55,7 @@ public class Main extends Application {
         Controller controller = loader.getController();
 
         //initialization
-        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
+        Logger.getRootLogger().setLevel(Level.OFF);
         controller.filterChoice.valueProperty().set(null);
         controller.filterChoice.getItems().add("Minimum Age");
         controller.filterChoice.getItems().add("Maximum Age");
@@ -260,13 +280,12 @@ public class Main extends Application {
             String personURI = controller.uriQuery.getText();
             try {
                 Model model = FileManager.get().loadModel(file.toString());
-
-
+                InfModel infmodel = ModelFactory.createRDFSModel(model);
 
                 // list the statements in the Model
-                StmtIterator iter = model.listStatements();
+                StmtIterator iter = infmodel.listStatements();
 
-                // print out the predicate, subject and object of each statement
+                 //print out the predicate, subject and object of each statement
                 while (iter.hasNext()) {
                     Statement stmt = iter.nextStatement();  // get next statement
                     Resource subject = stmt.getSubject();     // get the subject
