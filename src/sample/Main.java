@@ -397,8 +397,7 @@ public class Main extends Application {
             // when the login button is clicked.
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == addButtonType) {
-                    //do the queries
-
+                    //fetch the dep prefix
                     String queryString3 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
                             "PREFIX rdfs: <http://www.w3.org/2000/01/22-rdf-schema#>" +
                             "PREFIX uni: <http://www.university.fake/university#>" +
@@ -407,18 +406,18 @@ public class Main extends Application {
                             "?dep uni:dep_name '" + comboBox.getValue() + "' ." +
                             "?prof uni:member_of ?dep ." +
                             "?prof uni:has_name ?prof_name }";
-                    String dep_prefix = "";
+                    String dep_prefix = null;
                     Query query3 = QueryFactory.create(queryString3);
                     try (QueryExecution qexec = QueryExecutionFactory.create(query3, model)) {
                         ResultSet result = qexec.execSelect();
                         for (; result.hasNext(); ) {
                             QuerySolution soln = result.nextSolution();
-                            String dep = soln.getResource("dep").toString();
-                            dep_prefix = dep_prefix.substring(1, dep.length() - 1);
+                            dep_prefix = soln.getResource("dep").toString();
                         }
                     }
+                    //add
 
-                    System.out.println(dep_prefix);
+
 
                     return new Staff(name.getText(), phone.getText(), age.getText(), dep_prefix);
                 }
