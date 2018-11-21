@@ -20,7 +20,9 @@ import javafx.geometry.Insets;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Pair;
+import org.apache.commons.io.FileUtils;
 import org.apache.jena.base.Sys;
+import org.apache.jena.datatypes.xsd.XSDDatatype;
 import org.apache.jena.ontology.OntClass;
 import org.apache.jena.ontology.OntModel;
 import org.apache.jena.ontology.OntModelSpec;
@@ -29,15 +31,16 @@ import org.apache.jena.rdf.model.*;
 import org.apache.jena.reasoner.Reasoner;
 import org.apache.jena.reasoner.rulesys.GenericRuleReasoner;
 import org.apache.jena.reasoner.rulesys.Rule;
+import org.apache.jena.riot.Lang;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.util.FileManager;
 import org.apache.jena.util.iterator.ExtendedIterator;
+import org.apache.jena.vocabulary.RDFS;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import java.awt.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -334,6 +337,8 @@ public class Main extends Application {
             phone.setPromptText("Phone");
             TextField age = new TextField();
             age.setPromptText("Age");
+            TextField teaches = new TextField();
+            teaches.setPromptText("Teaches");
             ObservableList<String> options =
                     FXCollections.observableArrayList();
             ComboBox<String> comboBox = new ComboBox<>(options);
@@ -346,6 +351,8 @@ public class Main extends Application {
             grid.add(age, 1, 2);
             grid.add(new Label("Department:"), 0, 3);
             grid.add(comboBox, 1, 3);
+            grid.add(new Label("Teaches:"), 0, 4);
+            grid.add(teaches, 1, 4);
 
             Model model = FileManager.get().loadModel(file.toString());
 
@@ -366,7 +373,7 @@ public class Main extends Application {
                 for (; result.hasNext(); ) {
                     QuerySolution soln = result.nextSolution();
                     String depname = soln.getLiteral("depname").toString();
-                    options.add(depname.toString());
+                    options.add(depname);
                 }
             }
             comboBox.getSelectionModel().selectFirst();
@@ -415,11 +422,20 @@ public class Main extends Application {
                             dep_prefix = soln.getResource("dep").toString();
                         }
                     }
-                    //add
+                    //add the professor
+                    String professor = "<rdf:Description rdf:about=\"" + dep_prefix + phone.getText() + "\">\n" +
+                            "\t<rdf:type rdf:resource=\"uni:Professor\"/>\n" +
+                            "    <uni:has_name>" + name.getText() +"</uni:has_name>\n" +
+                            "    <uni:has_phone>"+ phone.getText() +"</uni:has_phone>\n" +
+                            "    <uni:has_age>" + age.getText() + "</uni:has_age>\n" +
+                            "    <uni:member_of rdf:resource=\"" + dep_prefix + "\"/>\n" +
+                            "    <uni:teaches>" + teaches.getText() +"</uni:teaches>\n" +
+                            "</rdf:Description>\n\n" +
+                            "</rdf:RDF>";
 
+                    modifyRDF(file.toString(), "</rdf:RDF>", professor);
 
-
-                    return new Staff(name.getText(), phone.getText(), age.getText(), dep_prefix);
+                    return new Staff(name.getText(), phone.getText(), age.getText(), dep_prefix, teaches.getText());
                 }
                 return null;
             });
@@ -458,12 +474,70 @@ public class Main extends Application {
         String phone;
         String age;
         String department;
+        String teaches;
 
-        public Staff(String name, String phone, String age, String department) {
+        public Staff(String name, String phone, String age, String department, String teaches) {
             this.name = name;
             this.phone = phone;
             this.age = age;
             this.department = department;
+            this.teaches = teaches;
+        }
+    }
+
+    static void modifyRDF(String filePath, String oldString, String newString)
+    {
+        File fileToBeModified = new File(filePath);
+
+        String oldContent = "";
+
+        BufferedReader reader = null;
+
+        FileWriter writer = null;
+
+        try
+        {
+            reader = new BufferedReader(new FileReader(fileToBeModified));
+
+            //Reading all the lines of input text file into oldContent
+
+            String line = reader.readLine();
+
+            while (line != null)
+            {
+                oldContent = oldContent + line + System.lineSeparator();
+
+                line = reader.readLine();
+            }
+
+            //Replacing oldString with newString in the oldContent
+
+            String newContent = oldContent.replaceAll(oldString, newString);
+
+            //Rewriting the input text file with newContent
+
+            writer = new FileWriter(fileToBeModified);
+
+            writer.write(newContent);
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            try
+            {
+                //Closing the resources
+
+                reader.close();
+
+                writer.close();
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
