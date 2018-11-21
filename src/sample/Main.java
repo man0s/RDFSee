@@ -325,7 +325,7 @@ public class Main extends Application {
             ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
             dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
 
-            // Create the username and password labels and fields.
+            // Create the labels and fields.
             GridPane grid = new GridPane();
             grid.setHgap(10);
             grid.setVgap(10);
@@ -401,7 +401,7 @@ public class Main extends Application {
             // Request focus on the username field by default.
             Platform.runLater(() -> name.requestFocus());
 
-            // when the login button is clicked.
+            // when the professor button is clicked.
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == addButtonType) {
                     //fetch the dep prefix
@@ -435,7 +435,7 @@ public class Main extends Application {
 
                     modifyRDF(file.toString(), "</rdf:RDF>", professor);
 
-                    return new Staff(name.getText(), phone.getText(), age.getText(), dep_prefix, teaches.getText());
+                    return new Staff(name.getText(), phone.getText(), age.getText(), dep_prefix);
                 }
                 return null;
             });
@@ -445,18 +445,200 @@ public class Main extends Application {
         });
 
         controller.studentButton.setOnAction((event) -> {
+            // Create the custom dialog.
+            Dialog<Staff> dialog = new Dialog<>();
+            dialog.setTitle("Add Student");
 
+
+            // Set the button types.
+            ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+            // Create the labels and fields.
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(40, 170, 20, 20));
+
+            TextField name = new TextField();
+            name.setPromptText("Name");
+            TextField phone = new TextField();
+            phone.setPromptText("Phone");
+            TextField age = new TextField();
+            age.setPromptText("Age");
+            ObservableList<String> options =
+                    FXCollections.observableArrayList();
+            ComboBox<String> comboBox = new ComboBox<>(options);
+
+            grid.add(new Label("Name:"), 0, 0);
+            grid.add(name, 1, 0);
+            grid.add(new Label("Phone:"), 0, 1);
+            grid.add(phone, 1, 1);
+            grid.add(new Label("Age:"), 0, 2);
+            grid.add(age, 1, 2);
+            grid.add(new Label("Department:"), 0, 3);
+            grid.add(comboBox, 1, 3);
+
+            Model model = FileManager.get().loadModel(file.toString());
+
+            String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
+                    "PREFIX rdfs: <http://www.w3.org/2000/01/22-rdf-schema#>" +
+                    "PREFIX uni: <http://www.university.fake/university#>" +
+                    "SELECT distinct ?depname " +
+                    "WHERE {" +
+                    "{ ?person rdf:type <uni:Person> }" +
+                    "UNION { ?person rdf:type <uni:Student> }" +
+                    "UNION { ?person rdf:type <uni:Professor> }" +
+                    "?person uni:member_of ?dep ." +
+                    "?dep uni:dep_name ?depname }";
+
+            Query query = QueryFactory.create(queryString);
+            try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
+                ResultSet result = qexec.execSelect();
+                for (; result.hasNext(); ) {
+                    QuerySolution soln = result.nextSolution();
+                    String depname = soln.getLiteral("depname").toString();
+                    options.add(depname);
+                }
+            }
+            comboBox.getSelectionModel().selectFirst();
+
+
+            dialog.getDialogPane().setContent(grid);
+            BooleanBinding bb = new BooleanBinding() {
+                {
+                    super.bind(name.textProperty(),
+                            phone.textProperty(),
+                            age.textProperty());
+                }
+
+                @Override
+                protected boolean computeValue() {
+                    return (name.getText().isEmpty()
+                            || phone.getText().isEmpty()
+                            || age.getText().isEmpty());
+                }
+            };
+
+            Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+            addButton.disableProperty().bind(bb); //disable button when inputs are empty
+
+            // Request focus on the username field by default.
+            Platform.runLater(() -> name.requestFocus());
+
+            // when the student button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == addButtonType) {
+                    //fetch the dep prefix
+                    String queryString3 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
+                            "PREFIX rdfs: <http://www.w3.org/2000/01/22-rdf-schema#>" +
+                            "PREFIX uni: <http://www.university.fake/university#>" +
+                            "SELECT distinct ?dep " +
+                            "WHERE {" +
+                            "?dep uni:dep_name '" + comboBox.getValue() + "' ." +
+                            "?prof uni:member_of ?dep ." +
+                            "?prof uni:has_name ?prof_name }";
+                    String dep_prefix = null;
+                    Query query3 = QueryFactory.create(queryString3);
+                    try (QueryExecution qexec = QueryExecutionFactory.create(query3, model)) {
+                        ResultSet result = qexec.execSelect();
+                        for (; result.hasNext(); ) {
+                            QuerySolution soln = result.nextSolution();
+                            dep_prefix = soln.getResource("dep").toString();
+                        }
+                    }
+                    //add the student
+                    String student = "<rdf:Description rdf:about=\"" + dep_prefix + phone.getText() + "\">\n" +
+                            "\t<rdf:type rdf:resource=\"uni:Student\"/>\n" +
+                            "    <uni:has_name>" + name.getText() +"</uni:has_name>\n" +
+                            "    <uni:has_phone>"+ phone.getText() +"</uni:has_phone>\n" +
+                            "    <uni:has_age>" + age.getText() + "</uni:has_age>\n" +
+                            "    <uni:member_of rdf:resource=\"" + dep_prefix + "\"/>\n" +
+                            "</rdf:Description>\n\n" +
+                            "</rdf:RDF>";
+
+                    modifyRDF(file.toString(), "</rdf:RDF>", student);
+
+                    return new Staff(name.getText(), phone.getText(), age.getText(), dep_prefix);
+                }
+                return null;
+            });
+
+            dialog.showAndWait();
         });
 
         controller.departmentButton.setOnAction((event) -> {
+            // Create the custom dialog.
+            Dialog<Department> dialog = new Dialog<>();
+            dialog.setTitle("Add Department");
 
+
+            // Set the button types.
+            ButtonType addButtonType = new ButtonType("Add", ButtonBar.ButtonData.OK_DONE);
+            dialog.getDialogPane().getButtonTypes().addAll(addButtonType, ButtonType.CANCEL);
+
+            // Create the labels and fields.
+            GridPane grid = new GridPane();
+            grid.setHgap(10);
+            grid.setVgap(10);
+            grid.setPadding(new Insets(40, 170, 20, 20));
+
+            TextField name = new TextField();
+            name.setPromptText("Name");
+            TextField city = new TextField();
+            city.setPromptText("City");
+
+            grid.add(new Label("Name:"), 0, 0);
+            grid.add(name, 1, 0);
+            grid.add(new Label("City:"), 0, 1);
+            grid.add(city, 1, 1);
+
+
+            dialog.getDialogPane().setContent(grid);
+            BooleanBinding bb = new BooleanBinding() {
+                {
+                    super.bind(name.textProperty(),
+                            city.textProperty());
+                }
+
+                @Override
+                protected boolean computeValue() {
+                    return (name.getText().isEmpty()
+                            || city.getText().isEmpty());
+                }
+            };
+
+            Node addButton = dialog.getDialogPane().lookupButton(addButtonType);
+            addButton.disableProperty().bind(bb); //disable button when inputs are empty
+
+            // Request focus on the username field by default.
+            Platform.runLater(() -> name.requestFocus());
+
+            // when the department button is clicked.
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == addButtonType) {
+                    //add the department
+                    String department = "<rdf:Description rdf:about=\"" + "uni:" + name.getText() + "\">\n" +
+                            "    <uni:has_name>" + name.getText() +"</uni:has_name>\n" +
+                            "    <uni:has_phone>"+ city.getText() +"</uni:has_phone>\n" +
+                            "</rdf:Description>\n\n" +
+                            "</rdf:RDF>";
+
+                    modifyRDF(file.toString(), "</rdf:RDF>", department);
+
+                    return new Department(name.getText(), city.getText());
+                }
+                return null;
+            });
+
+            dialog.showAndWait();
         });
 
         controller.lessonButton.setOnAction((event) -> {
 
         });
 
-        primaryStage.setTitle("RDFSee");
+        primaryStage.setTitle("RDFSee: RDF Editor & Viewer");
         primaryStage.setScene(new Scene(root, 800, 600));
         primaryStage.show();
     }
@@ -474,14 +656,22 @@ public class Main extends Application {
         String phone;
         String age;
         String department;
-        String teaches;
 
-        public Staff(String name, String phone, String age, String department, String teaches) {
+        public Staff(String name, String phone, String age, String department) {
             this.name = name;
             this.phone = phone;
             this.age = age;
             this.department = department;
-            this.teaches = teaches;
+        }
+    }
+
+    private static class Department {
+        String name;
+        String city;
+
+        public Department(String name, String city) {
+            this.name = name;
+            this.city = city;
         }
     }
 
