@@ -67,12 +67,12 @@
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="fxml" value="6" />
-          <entry key="java" value="3288" />
+          <entry key="java" value="3297" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="3288" />
+          <entry key="JAVA" value="3297" />
           <entry key="XML" value="6" />
         </counts>
       </usages-collector>
@@ -96,7 +96,7 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="469">
+            <state relative-caret-position="538">
               <caret line="640" column="58" selection-start-line="640" selection-start-column="58" selection-end-line="640" selection-end-column="58" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -310,12 +310,12 @@
       <workItem from="1542621298542" duration="87000" />
       <workItem from="1542730256438" duration="2181000" />
       <workItem from="1542741148192" duration="8169000" />
-      <workItem from="1542826136487" duration="4123000" />
+      <workItem from="1542826136487" duration="4572000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46041000" />
+    <option name="totallyTimeSpent" value="46490000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -392,7 +392,7 @@
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/javafx-src.zip!/javafx/event/EventHandler.java" />
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="469">
+        <state relative-caret-position="538">
           <caret line="640" column="58" selection-start-line="640" selection-start-column="58" selection-end-line="640" selection-end-column="58" />
           <folding>
             <element signature="imports" expanded="true" />
