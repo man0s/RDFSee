@@ -26,4 +26,4 @@ Check [CONTRIBUTING.md](CONTRIBUTING.md) for more information.
 
 ## License
 
-[Apache license 2.0](LICENSE)© <a href="https://github.com/man0s">Emmanouil Katefidis</a>.
+[MIT](LICENSE)© <a href="https://github.com/man0s">Emmanouil Katefidis</a>.
