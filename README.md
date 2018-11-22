@@ -1,6 +1,6 @@
 # RDFSee: RDF Viewer & Editor
 <p align="center">
-   <img src="https://i.imgur.com/JTM04PA.png">
+   <img src="https://i.imgur.com/8ePd5Vv.png">
 </p>
 <br>
 <i>
