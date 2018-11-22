@@ -15,7 +15,7 @@
 $ git clone https://github.com/man0s/RDFSee.git
 $ cd RDFSee
 $ cd Executables
-$ java -jar FM2017.jar
+$ java -jar RDFSee.jar
 
 Requires Java SE Runtime Environment 8u144
 ```
