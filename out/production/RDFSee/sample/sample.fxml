@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
+<VBox prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controller">
   <children>
     <MenuBar VBox.vgrow="NEVER">
       <menus>
@@ -35,11 +35,6 @@
                   </Menu>
                </items>
             </Menu>
-        <Menu mnemonicParsing="false" text="Help">
-          <items>
-            <MenuItem fx:id="aboutButton" mnemonicParsing="false" text="About" />
-          </items>
-        </Menu>
       </menus>
     </MenuBar>
     <AnchorPane maxHeight="-1.0" maxWidth="-1.0" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">

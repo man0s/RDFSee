@@ -19,8 +19,6 @@ public class Controller {
     @FXML
     public MenuItem lessonButton;
     @FXML
-    public MenuItem aboutButton;
-    @FXML
     public TableView dataTable;
     @FXML
     private TableColumn nameColumn;
