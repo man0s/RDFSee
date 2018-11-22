@@ -56,23 +56,23 @@
     <session id="-1562050126">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="5" />
+          <entry key="project.closed" value="7" />
           <entry key="project.open.time.3" value="1" />
-          <entry key="project.open.time.5" value="2" />
-          <entry key="project.open.time.6" value="3" />
+          <entry key="project.open.time.5" value="3" />
+          <entry key="project.open.time.6" value="4" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="7" />
+          <entry key="project.opened" value="9" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="fxml" value="6" />
-          <entry key="java" value="3297" />
+          <entry key="java" value="3530" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="JAVA" value="3297" />
+          <entry key="JAVA" value="3530" />
           <entry key="XML" value="6" />
         </counts>
       </usages-collector>
@@ -96,12 +96,12 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="538">
-              <caret line="640" column="58" selection-start-line="640" selection-start-column="58" selection-end-line="640" selection-end-column="58" />
+            <state relative-caret-position="198">
+              <caret line="723" column="78" selection-start-line="723" selection-start-column="78" selection-end-line="723" selection-end-column="78" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#22328#22329#0" expanded="true" />
-                <element signature="e#22356#22357#0" expanded="true" />
+                <element signature="e#33055#33056#0" expanded="true" />
+                <element signature="e#33128#33129#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -310,18 +310,20 @@
       <workItem from="1542621298542" duration="87000" />
       <workItem from="1542730256438" duration="2181000" />
       <workItem from="1542741148192" duration="8169000" />
-      <workItem from="1542826136487" duration="4572000" />
+      <workItem from="1542826136487" duration="5000000" />
+      <workItem from="1542896814841" duration="548000" />
+      <workItem from="1542901888558" duration="1457000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="46490000" />
+    <option name="totallyTimeSpent" value="48923000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.11886994" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.12100213" />
       <window_info id="Structure" order="1" weight="0.25" />
       <window_info id="Favorites" order="2" />
       <window_info id="Designer" order="3" />
@@ -392,12 +394,12 @@
     <entry file="jar://C:/Program Files/Java/jdk1.8.0_191/javafx-src.zip!/javafx/event/EventHandler.java" />
     <entry file="file://$PROJECT_DIR$/src/sample/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="538">
-          <caret line="640" column="58" selection-start-line="640" selection-start-column="58" selection-end-line="640" selection-end-column="58" />
+        <state relative-caret-position="198">
+          <caret line="723" column="78" selection-start-line="723" selection-start-column="78" selection-end-line="723" selection-end-column="78" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#22328#22329#0" expanded="true" />
-            <element signature="e#22356#22357#0" expanded="true" />
+            <element signature="e#33055#33056#0" expanded="true" />
+            <element signature="e#33128#33129#0" expanded="true" />
           </folding>
         </state>
       </provider>

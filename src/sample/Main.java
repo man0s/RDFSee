@@ -636,8 +636,8 @@ public class Main extends Application {
 
         controller.lessonButton.setOnAction((event) -> {
             // Create the custom dialog.
-            Dialog<Staff> dialog = new Dialog<>();
-            dialog.setTitle("Add Student");
+            Dialog<Lesson> dialog = new Dialog<>();
+            dialog.setTitle("Add Lesson");
 
 
             // Set the button types.
@@ -666,21 +666,18 @@ public class Main extends Application {
             String queryString = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
                     "PREFIX rdfs: <http://www.w3.org/2000/01/22-rdf-schema#>" +
                     "PREFIX uni: <http://www.university.fake/university#>" +
-                    "SELECT distinct ?depname " +
+                    "SELECT ?prof_name " +
                     "WHERE {" +
-                    "{ ?person rdf:type <uni:Person> }" +
-                    "UNION { ?person rdf:type <uni:Student> }" +
-                    "UNION { ?person rdf:type <uni:Professor> }" +
-                    "?person uni:member_of ?dep ." +
-                    "?dep uni:dep_name ?depname }";
+                    "?person rdf:type <uni:Professor> ." +
+                    "?person uni:has_name ?prof_name }";
 
             Query query = QueryFactory.create(queryString);
             try (QueryExecution qexec = QueryExecutionFactory.create(query, model)) {
                 ResultSet result = qexec.execSelect();
                 for (; result.hasNext(); ) {
                     QuerySolution soln = result.nextSolution();
-                    String depname = soln.getLiteral("depname").toString();
-                    options.add(depname);
+                    String prof_name = soln.getLiteral("prof_name").toString();
+                    options.add(prof_name);
                 }
             }
             comboBox.getSelectionModel().selectFirst();
@@ -689,16 +686,12 @@ public class Main extends Application {
             dialog.getDialogPane().setContent(grid);
             BooleanBinding bb = new BooleanBinding() {
                 {
-                    super.bind(name.textProperty(),
-                            phone.textProperty(),
-                            age.textProperty());
+                    super.bind(name.textProperty());
                 }
 
                 @Override
                 protected boolean computeValue() {
-                    return (name.getText().isEmpty()
-                            || phone.getText().isEmpty()
-                            || age.getText().isEmpty());
+                    return (name.getText().isEmpty());
                 }
             };
 
@@ -708,40 +701,35 @@ public class Main extends Application {
             // Request focus on the username field by default.
             Platform.runLater(() -> name.requestFocus());
 
-            // when the student button is clicked.
+            // when the lesson button is clicked.
             dialog.setResultConverter(dialogButton -> {
                 if (dialogButton == addButtonType) {
                     //fetch the dep prefix
                     String queryString3 = "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>" +
                             "PREFIX rdfs: <http://www.w3.org/2000/01/22-rdf-schema#>" +
                             "PREFIX uni: <http://www.university.fake/university#>" +
-                            "SELECT distinct ?dep " +
+                            "SELECT ?prof " +
                             "WHERE {" +
-                            "?dep uni:dep_name '" + comboBox.getValue() + "' ." +
-                            "?prof uni:member_of ?dep ." +
-                            "?prof uni:has_name ?prof_name }";
-                    String dep_prefix = null;
+                            "?prof uni:has_name '" + comboBox.getValue() + "' }";
+                    String prof_prefix = null;
                     Query query3 = QueryFactory.create(queryString3);
                     try (QueryExecution qexec = QueryExecutionFactory.create(query3, model)) {
                         ResultSet result = qexec.execSelect();
                         for (; result.hasNext(); ) {
                             QuerySolution soln = result.nextSolution();
-                            dep_prefix = soln.getResource("dep").toString();
+                            prof_prefix = soln.getResource("prof").toString();
                         }
                     }
-                    //add the student
-                    String student = "<rdf:Description rdf:about=\"" + dep_prefix + phone.getText() + "\">\n" +
-                            "\t<rdf:type rdf:resource=\"uni:Student\"/>\n" +
-                            "    <uni:has_name>" + name.getText() +"</uni:has_name>\n" +
-                            "    <uni:has_phone>"+ phone.getText() +"</uni:has_phone>\n" +
-                            "    <uni:has_age>" + age.getText() + "</uni:has_age>\n" +
-                            "    <uni:member_of rdf:resource=\"" + dep_prefix + "\"/>\n" +
+                    //add the lesson
+                    String lesson = "<rdf:Description rdf:about=\"" + "uni:" + name.getText() + "\">\n" +
+                            "    <uni:lec_name>" + name.getText() +"</uni:lec_name>\n" +
+                            "    <uni:taught_by rdf:resource=\"" + prof_prefix + "\"/>\n" +
                             "</rdf:Description>\n\n" +
                             "</rdf:RDF>";
 
-                    modifyRDF(file.toString(), "</rdf:RDF>", student);
+                    modifyRDF(file.toString(), "</rdf:RDF>", lesson);
 
-                    return new Staff(name.getText(), phone.getText(), age.getText(), dep_prefix);
+                    return new Lesson(name.getText(), prof_prefix);
                 }
                 return null;
             });
@@ -784,6 +772,16 @@ public class Main extends Application {
         public Department(String name, String city) {
             this.name = name;
             this.city = city;
+        }
+    }
+
+    private static class Lesson {
+        String name;
+        String taughtby;
+
+        public Lesson(String name, String taughtby) {
+            this.name = name;
+            this.taughtby = taughtby;
         }
     }
 
