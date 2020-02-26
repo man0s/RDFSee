@@ -1,4 +1,4 @@
-# RDFSee: RDF Viewer & Editor
+# 👀 RDFSee: RDF Viewer & Editor
 <p align="center">
    <img src="https://i.imgur.com/8ePd5Vv.png">
 </p>
